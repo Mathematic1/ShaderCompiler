@@ -14,14 +14,10 @@ set(SHADER_COMPILER ON)
 option(USE_GLSLANG "Glslang" ON)
 option(LOG_ALL "Log all results" OFF)
 
-###################
-#   Third party   #
-###################
-add_subdirectory(${PROJECT_SOURCE_DIR}/ThirdParty)
-
 list(APPEND ShaderCompiler_Source_File_Ext
         /*.cpp
         /*.hpp
+		/*.h
         /*.ini)
 
 if(${SHADER_COMPILER})
@@ -31,6 +27,11 @@ if(${SHADER_COMPILER})
     list(APPEND ShaderCompiler_Sources ${ShaderCompiler_Common_Sources})
     list(APPEND ShaderCompiler_Include_Dir ${CMAKE_CURRENT_SOURCE_DIR}/Source)
 endif ()
+
+###################
+#   Third party   #
+###################
+add_subdirectory(${PROJECT_SOURCE_DIR}/ThirdParty)
 
 find_package(Vulkan REQUIRED)
 list(APPEND ThirdParty_Libs
@@ -46,12 +47,13 @@ target_include_directories(ShaderCompiler
 		${ThirdParty_IncludeDirs})
 
 target_link_libraries(ShaderCompiler
-        PRIVATE 
+        PRIVATE		
         ${ThirdParty_Libs}
-        glslang::glslang
-        glslang::glslang-default-resource-limits
-        glslang::SPIRV
-        glslang::SPVRemapper)
+		#glslang::glslang
+        #glslang::glslang-default-resource-limits
+        #glslang::SPIRV
+        #glslang::SPVRemapper
+		)
 
 target_compile_features(ShaderCompiler
         PRIVATE cxx_std_20)

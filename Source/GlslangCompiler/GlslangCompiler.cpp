@@ -8,6 +8,11 @@
 
 namespace ShaderCompiler::Vulkan
 {
+    void initializeGlslang()
+    {
+        glslang_initialize_process();
+    }
+
     VkShaderStageFlagBits glslangShaderStageToVulkan(glslang_stage_t sh)
     {
         switch (sh)
