@@ -1,4 +1,5 @@
 #include <ShaderUtils/ShaderUtils.hpp>
+#include <cstring>
 
 namespace ShaderCompiler::ShaderUtils
 {
