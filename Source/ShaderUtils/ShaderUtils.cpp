@@ -8,7 +8,7 @@ namespace ShaderCompiler::ShaderUtils
 		return (strstr(s, part) - s) == (strlen(s) - strlen(part));
 	}
 
-	std::string readShaderFile(const char* fileName, const std::string& shaderDirectoryName)
+	std::string readShaderFile(const char *fileName, const std::vector<std::string> &includeDirs)
 	{
 		FILE* file = fopen(fileName, "r");
 		if (!file)
@@ -41,8 +41,13 @@ namespace ShaderCompiler::ShaderUtils
 				return std::string();
 			}
 			const std::string name = code.substr(p1 + 1, p2 - p1 - 1);
-			const std::string include = readShaderFile((shaderDirectoryName + name).c_str());
-			code.replace(pos, p2 - pos + 1, include.c_str());
+                        for (auto &includeDir : includeDirs) {
+                            const std::string includeCode = readShaderFile((includeDir + name).c_str());
+                            if (!includeCode.empty()) {
+                                code.replace(pos, p2 - pos + 1, includeCode.c_str());
+                                break;
+                            }
+                        }
 		}
 
 		return code;
