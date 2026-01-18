@@ -125,7 +125,7 @@ namespace ShaderCompiler::Vulkan
 
     size_t compileShaderFile(const ShaderCompilerDesc &desc, std::vector<unsigned int> &SPIRV) {
         if (auto shaderSource = ShaderUtils::readShaderFile(desc.entryFile, desc.includeDirs); !shaderSource.empty()) {
-            return compileShader(glslangShaderStageFromFileName(desc.entryFile), shaderSource.c_str(), SPIRV);
+            return compileShader(glslangShaderStageFromFileName(desc.entryFile.data()), shaderSource.c_str(), SPIRV);
         }
         return 0;
     }
