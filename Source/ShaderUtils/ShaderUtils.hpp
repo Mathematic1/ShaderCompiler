@@ -1,13 +1,14 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <span>
 
 namespace ShaderCompiler::ShaderUtils
 {
 	int endsWith(const char* s, const char* part);
 
-	std::string readShaderFile(const char* fileName, const std::vector<std::string> &includeDirs = {});
+	std::string readShaderFile(std::string_view fileName, std::span<const std::string> includeDirs = {})
+            noexcept(false);
 
 	void printShaderSource(const char* text);
 }

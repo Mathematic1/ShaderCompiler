@@ -8,7 +8,7 @@
 namespace ShaderCompiler::Vulkan
 {
     struct ShaderCompilerDesc {
-        const char *entryFile = nullptr;
+        std::string_view entryFile;
         std::vector<std::string> includeDirs;
         std::vector<std::string> defines;
     };
