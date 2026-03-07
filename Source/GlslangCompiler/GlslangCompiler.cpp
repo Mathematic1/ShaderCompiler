@@ -129,4 +129,8 @@ namespace ShaderCompiler::Vulkan
         }
         return 0;
     }
+
+    size_t compileShaderSource(glslang_stage_t stage, const char *source, std::vector<unsigned int> &SPIRV) {
+        return compileShader(stage, source, SPIRV);
+    }
 }
