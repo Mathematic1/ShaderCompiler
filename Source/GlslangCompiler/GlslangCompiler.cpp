@@ -57,7 +57,11 @@ namespace ShaderCompiler::Vulkan
         return GLSLANG_STAGE_VERTEX;
     }
 
-    static size_t compileShader(glslang_stage_t stage, const char* shaderSource, std::vector<unsigned int>& SPIRV)
+    static size_t compileShader(
+        glslang_stage_t stage,
+        const char* shaderSource,
+        std::vector<unsigned int>& SPIRV,
+        bool debug = false)
     {
         const glslang_input_t input{
                 GLSLANG_SOURCE_GLSL,
@@ -106,7 +110,21 @@ namespace ShaderCompiler::Vulkan
             return 0;
         }
 
-        glslang_program_SPIRV_generate(program, stage);
+        if (debug) {
+            glslang_spv_options_t spvOptions{};
+            spvOptions.generate_debug_info = true;
+            spvOptions.strip_debug_info = false;
+            spvOptions.disable_optimizer = true;
+            spvOptions.optimize_size = false;
+            spvOptions.disassemble = false;
+            spvOptions.validate = false;
+            spvOptions.emit_nonsemantic_shader_debug_info = false;
+            spvOptions.emit_nonsemantic_shader_debug_source = false;
+            spvOptions.compile_only = false;
+            glslang_program_SPIRV_generate_with_options(program, stage, &spvOptions);
+        } else {
+            glslang_program_SPIRV_generate(program, stage);
+        }
 
         SPIRV.resize(glslang_program_SPIRV_get_size(program));
         glslang_program_SPIRV_get(program, SPIRV.data());
@@ -123,14 +141,14 @@ namespace ShaderCompiler::Vulkan
         return SPIRV.size();
     }
 
-    size_t compileShaderFile(const ShaderCompilerDesc &desc, std::vector<unsigned int> &SPIRV) {
+    size_t compileShaderFile(const ShaderCompilerDesc &desc, std::vector<unsigned int> &SPIRV, bool debug) {
         if (auto shaderSource = ShaderUtils::readShaderFile(desc.entryFile, desc.includeDirs); !shaderSource.empty()) {
-            return compileShader(glslangShaderStageFromFileName(desc.entryFile.data()), shaderSource.c_str(), SPIRV);
+            return compileShader(glslangShaderStageFromFileName(desc.entryFile.data()), shaderSource.c_str(), SPIRV, debug);
         }
         return 0;
     }
 
-    size_t compileShaderSource(glslang_stage_t stage, const char *source, std::vector<unsigned int> &SPIRV) {
-        return compileShader(stage, source, SPIRV);
+    size_t compileShaderSource(glslang_stage_t stage, const char *source, std::vector<unsigned int> &SPIRV, bool debug) {
+        return compileShader(stage, source, SPIRV, debug);
     }
 }

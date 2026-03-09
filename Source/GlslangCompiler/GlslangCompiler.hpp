@@ -16,6 +16,8 @@ namespace ShaderCompiler::Vulkan
     void initializeGlslang();
     VkShaderStageFlagBits glslangShaderStageToVulkan(glslang_stage_t sh);
     glslang_stage_t glslangShaderStageFromFileName(const char* fileName);
-    size_t compileShaderFile(const ShaderCompilerDesc &desc, std::vector<unsigned int> &SPIRV);
-    size_t compileShaderSource(glslang_stage_t stage, const char *source, std::vector<unsigned int> &SPIRV);
+    size_t compileShaderFile(const ShaderCompilerDesc &desc, std::vector<unsigned int> &SPIRV, bool debug = false);
+    size_t compileShaderSource(
+        glslang_stage_t stage, const char *source, std::vector<unsigned int> &SPIRV, bool debug = false
+    );
 }
