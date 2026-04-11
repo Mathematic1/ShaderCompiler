@@ -146,9 +146,7 @@ namespace ShaderCompiler::ShaderUtils
                         continue;
                     }
 
-                    const auto fullPath = std::filesystem::weakly_canonical(
-                        findHeaderFile(parsed->name, includeDirs, currentFileDir)
-                    );
+                    const auto fullPath = findHeaderFile(parsed->name, includeDirs, currentFileDir).lexically_normal();
 
                     if (std::ranges::find(includeStack, fullPath) != includeStack.end()) {
                         throw std::runtime_error(std::format("Cyclic include detected: {}", fullPath.string()));
